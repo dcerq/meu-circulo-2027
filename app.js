@@ -533,6 +533,74 @@ $('#imp').addEventListener('change', async () => {
   w(ops, `Importei ${ps.length} pessoa${ps.length === 1 ? '' : 's'} e ${es.length} encontro${es.length === 1 ? '' : 's'}`, undo);
 });
 
+
+/* ================= importar contatos (vCard / CSV do Google) ================= */
+const digits = t => String(t || '').replace(/\D/g, '');
+function bdayOf(v) { const m = String(v || '').replace(/T.*$/, '').match(/(\d{2})-?(\d{2})$/); return m ? `${Number(m[2])}/${Number(m[1])}` : ''; }
+function parseVcf(txt) {
+  const out = [], lines = txt.replace(/\r\n/g, '\n').replace(/\n[ \t]/g, '').split('\n');
+  let c = null;
+  const un = v => v.replace(/\\n/gi, ' ').replace(/\\([,;\\])/g, '$1').trim();
+  for (const ln of lines) {
+    if (/^BEGIN:VCARD/i.test(ln)) { c = { fn: '', n: '', tels: [], bday: '' }; continue; }
+    if (/^END:VCARD/i.test(ln)) { if (c) out.push(c); c = null; continue; }
+    if (!c) continue;
+    const i = ln.indexOf(':'); if (i < 0) continue;
+    const key = ln.slice(0, i), val = ln.slice(i + 1), name = key.split(';')[0].replace(/^item\d+\./i, '').toUpperCase();
+    if (name === 'FN') c.fn = un(val);
+    else if (name === 'N') c.n = un(val.split(';').slice(0, 3).reverse().filter(Boolean).join(' '));
+    else if (name === 'TEL') c.tels.push({ v: val, cell: /CELL|IPHONE|MOBILE/i.test(key) });
+    else if (name === 'BDAY') c.bday = bdayOf(val);
+  }
+  return out.map(c => ({ nome: c.fn || c.n, zap: ((c.tels.find(t => t.cell) || c.tels[0] || {}).v || '').trim(), aniver: c.bday }));
+}
+function parseCsv(txt) {
+  const rows = []; let row = [], f = '', q = false;
+  for (let i = 0; i < txt.length; i++) {
+    const ch = txt[i];
+    if (q) { if (ch === '"') { if (txt[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += ch; }
+    else if (ch === '"') q = true; else if (ch === ',') { row.push(f); f = ''; }
+    else if (ch === '\n' || ch === '\r') { if (ch === '\r' && txt[i + 1] === '\n') i++; row.push(f); rows.push(row); row = []; f = ''; }
+    else f += ch;
+  }
+  if (f || row.length) { row.push(f); rows.push(row); }
+  const h = (rows.shift() || []).map(x => x.trim().replace(/^﻿/, '')), col = n => h.findIndex(x => x.toLowerCase() === n.toLowerCase());
+  const cN = col('Name'), cF = col('First Name') >= 0 ? col('First Name') : col('Given Name'), cM = col('Middle Name') >= 0 ? col('Middle Name') : col('Additional Name'), cL = col('Last Name') >= 0 ? col('Last Name') : col('Family Name'), cB = col('Birthday');
+  const phones = h.map((x, i) => /^Phone \d+ - Value$/i.test(x) ? i : -1).filter(i => i >= 0), labels = h.map((x, i) => /^Phone \d+ - (Label|Type)$/i.test(x) ? i : -1).filter(i => i >= 0);
+  return rows.filter(r => r.some(x => x.trim())).map(r => {
+    const nome = ((cN >= 0 && r[cN]) || [cF, cM, cL].filter(i => i >= 0).map(i => r[i] || '').join(' ')).replace(/\s+/g, ' ').trim();
+    const ph = phones.map((i, k) => ({ v: (r[i] || '').split(':::')[0].trim(), cell: /mobile|cel/i.test(r[labels[k]] || '') })).filter(x => x.v);
+    return { nome, zap: ((ph.find(x => x.cell) || ph[0] || {}).v || ''), aniver: cB >= 0 ? bdayOf(r[cB]) : '' };
+  });
+}
+let IMP = [];
+function renderImp() {
+  const q = $('#i-q').value.trim().toLowerCase();
+  $('#i-list').innerHTML = IMP.map((c, i) => ({ c, i })).filter(({ c }) => !q || c.nome.toLowerCase().includes(q)).slice(0, 600).map(({ c, i }) =>
+    `<label class="irow${c.tem ? ' dis' : ''}"><input type="checkbox" data-i="${i}"${c.sel ? ' checked' : ''}${c.tem ? ' disabled' : ''}><span><b>${esc(c.nome)}</b><br><small>${esc([c.zap, c.aniver && 'aniversário ' + c.aniver, c.tem && 'já está no círculo'].filter(Boolean).join(' · ') || 'sem telefone')}</small></span></label>`).join('') || '<p class="mut">Ninguém com esse nome.</p>';
+  const n = IMP.filter(c => c.sel).length; $('#i-ok').textContent = `Adicionar ${n}`; $('#i-ok').disabled = !n;
+}
+$('#cimp').addEventListener('change', async () => {
+  const f = $('#cimp').files[0]; $('#cimp').value = ''; if (!f) return;
+  const txt = await f.text(), list = /BEGIN:VCARD/i.test(txt) ? parseVcf(txt) : parseCsv(txt);
+  const names = new Set(S.pessoas.map(p => p.nome.trim().toLowerCase())), tels = new Set(S.pessoas.map(p => digits(p.zap).slice(-9)).filter(t => t.length >= 8)), seen = new Set();
+  IMP = list.filter(c => c.nome).filter(c => { const k = c.nome.toLowerCase() + '|' + digits(c.zap); if (seen.has(k)) return false; seen.add(k); return true; })
+    .map(c => ({ ...c, tem: names.has(c.nome.trim().toLowerCase()) || (digits(c.zap).length >= 8 && tels.has(digits(c.zap).slice(-9))), sel: false }))
+    .sort((a, b) => a.nome.localeCompare(b.nome));
+  if (!IMP.length) { toast('Não achei contatos nesse arquivo. Use o vCard do iCloud ou o CSV do Google.'); return; }
+  $('#i-info').textContent = `${IMP.length} contatos no arquivo. Marque só quem você quer ver com constância.`;
+  $('#i-g').innerHTML = opts(Object.entries(GR), 'amigos'); $('#i-f').innerHTML = opts(FREQ, 90); $('#i-q').value = '';
+  renderImp(); $('#dlgI').showModal();
+});
+$('#i-q').addEventListener('input', renderImp);
+$('#i-list').addEventListener('change', ev => { const i = ev.target.getAttribute('data-i'); if (i !== null && IMP[i]) { IMP[i].sel = ev.target.checked; const n = IMP.filter(c => c.sel).length; $('#i-ok').textContent = `Adicionar ${n}`; $('#i-ok').disabled = !n; } });
+$('#fI').addEventListener('submit', ev => {
+  ev.preventDefault(); const sel = IMP.filter(c => c.sel && !c.tem); if (!sel.length) return;
+  const ops = sel.map(c => ({ t: 'put', kind: 'pessoas', obj: { id: uid(), nome: c.nome, grupo: $('#i-g').value, freq: Number($('#i-f').value), ultimo: '', zap: c.zap, aniver: c.aniver, ideias: '', criadoEm: iso() } }));
+  sel.forEach(c => { c.tem = true; c.sel = false; }); renderImp();
+  w(ops, `${ops.length} pessoa${ops.length > 1 ? 's' : ''} no círculo. Pode marcar outra leva ou fechar.`, ops.map(o => ({ t: 'del', kind: 'pessoas', id: o.obj.id })));
+});
+
 /* ================= ações ================= */
 function setStatus(id, s) { const e = S.planos.find(x => x.id === id); if (!e) return; const obj = withHist(Object.assign(clone(e), { status: s })); w([{ t: 'put', kind: 'encontros', obj }], s === 'feito' ? `Registrado: ${names(e, 1)}` : 'Marcado como não rolou', [{ t: 'put', kind: 'encontros', obj: clone(e) }]); }
 document.addEventListener('click', ev => {

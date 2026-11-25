@@ -108,6 +108,7 @@ dialog form{padding:22px}.fld{display:grid;gap:6px;margin-bottom:14px}.fld>span{
 .foot{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-top:8px}
 #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:14px;display:flex;gap:12px;align-items:center;max-width:calc(100vw - 32px);z-index:9}
 #toast[hidden]{display:none}#toast button{background:none;border:0;color:var(--sun);font:700 15px "Nunito Sans",sans-serif;cursor:pointer;min-height:36px}
+.irow{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);cursor:pointer}.irow:first-child{border-top:0}.irow input{width:20px;height:20px;min-height:0;flex:none}.irow small{color:var(--mut)}.irow.dis{opacity:.5;cursor:default}
 .empty{padding:16px;border:1px dashed var(--line);border-radius:14px;color:var(--mut)}
 details summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
 #login{min-height:70vh;display:grid;place-items:center}
@@ -168,6 +169,9 @@ details summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;alig
   <div class="tline" style="align-items:center;margin-bottom:14px"><h2 style="margin:0">Pessoas do círculo</h2>
     <div class="bar"><input id="q" type="search" placeholder="Buscar" style="width:12em" aria-label="Buscar pessoa"><button class="btn pri" data-act="addp">Adicionar pessoa</button></div></div>
   <div class="scroll"><table class="tbl stack"><thead><tr><th>Nome</th><th>Ritmo</th><th>Último encontro</th><th>Situação</th><th>Próximo</th><th></th></tr></thead><tbody id="ptb"></tbody></table></div>
+  <div class="card" style="margin-top:20px"><h3>Importar contatos do celular</h3>
+    <p class="mut" style="margin:6px 0 10px">iPhone: icloud.com → Contatos → selecione todos (Cmd/Ctrl+A) → engrenagem → Exportar vCard. Google: contacts.google.com → Exportar → CSV do Google. Depois você escolhe quem entra no círculo.</p>
+    <label class="btn pri" for="cimp">Escolher arquivo (.vcf ou .csv)</label><input id="cimp" type="file" accept=".vcf,.vcard,.csv,text/vcard,text/csv" hidden></div>
   <details class="card" style="margin-top:20px"><summary>Adicionar vários de uma vez</summary>
     <p class="mut">Um nome por linha. Depois você ajusta cada um.</p>
     <textarea id="bulk" placeholder="Ana Paula&#10;Rafa&#10;Tia Cida"></textarea>
@@ -210,6 +214,15 @@ details summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;alig
   <div class="foot"><button type="button" class="btn" id="e-del">Excluir</button><div class="bar"><button type="button" class="btn" data-close>Fechar</button><button type="submit" class="btn pri">Salvar</button></div></div>
 </form></dialog>
 
+<dialog id="dlgI"><form id="fI" method="dialog">
+  <h3 style="margin-bottom:8px">Quem entra no círculo?</h3>
+  <p class="mut" id="i-info" style="margin:0 0 10px"></p>
+  <input id="i-q" type="search" placeholder="Buscar nome" aria-label="Buscar contato" style="margin-bottom:10px">
+  <div id="i-list" style="max-height:min(46dvh,420px);overflow:auto;border:1px solid var(--line);border-radius:12px;padding:4px 10px"></div>
+  <div class="two" style="margin-top:12px"><label class="fld"><span>Grupo</span><select id="i-g"></select></label><label class="fld"><span>Quero ver</span><select id="i-f"></select></label></div>
+  <p class="mut" style="margin:0 0 8px">Dá para importar em levas: primeiro os amigos com um ritmo, depois a família com outro.</p>
+  <div class="foot"><button type="button" class="btn" data-close>Cancelar</button><button type="submit" class="btn pri" id="i-ok">Adicionar 0</button></div>
+</form></dialog>
 <div id="toast" hidden role="status"><span id="tmsg"></span><button id="tundo" hidden>Desfazer</button></div>
 <script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
 <script type="module" src="app.js"></script>

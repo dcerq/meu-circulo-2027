@@ -48,6 +48,14 @@ Enquanto o `firebase-config.js` não estiver preenchido, o app roda em **modo de
 
 Abra o site no navegador do celular e use "Adicionar à tela de início". Se o login não abrir no app instalado no iPhone, entre pelo Safari uma vez.
 
+## Importar contatos do celular
+
+Na aba **Pessoas → Importar contatos do celular**:
+- **iPhone:** icloud.com → Contatos → selecione todos → engrenagem → Exportar vCard (.vcf).
+- **Google:** contacts.google.com → Exportar → CSV do Google.
+
+O app lê nome, telefone (celular primeiro) e aniversário, marca quem já está no círculo, e você escolhe quem entra, com grupo e ritmo. O arquivo é lido só no navegador; só as pessoas escolhidas vão para o Firestore.
+
 ## Backup
 
 Aba **Histórico → Baixar backup (JSON)**. O mesmo arquivo pode ser importado de volta.
