@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1f5fd1">
+<title>Meu Círculo 2027</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Nunito+Sans:wght@400;600;700&display=swap">
+<style>
+/* VOICE everyday and warm: a personal planner for keeping people close, not a corporate CRM
+   IDEA a folhinha de parede crossed with a friendship circle: who is close, who is drifting away
+   PICTURE the mapa da saudade: concentric rings from "em dia" to "saudade", each person a dot placed by how overdue they are
+   COLOUR Bonfim-ribbon blue band, white ground, sun yellow for reserved days, coral for saudade; one colour per group
+   TYPE Sora 700 for titles and figures + Nunito Sans for text
+   LAYOUT blue header with figures and tabs; painel = map left, fila right; agenda = month grid + day panel; phone stacks */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#0b1220);--ink:light-dark(#0e1a2b,#e8eef8);--mut:light-dark(#4a5970,#9fb0c8);--line:light-dark(#dbe3ee,#26344e);--pan:light-dark(#f3f6fb,#111b2e);--band:light-dark(#1f5fd1,#173c8a);--bandk:light-dark(#1a50b3,#6b98ff);--sun:light-dark(#f5b700,#f2b92b);--sunt:light-dark(#fff3cf,#3a3216);--cor:light-dark(#d93a40,#ff7a7e);--g-amigos:light-dark(#1f5fd1,#5b8cff);--g-familia:light-dark(#c97c00,#f0a630);--g-namorada:light-dark(#cf2a6c,#ff5f9c);--g-outros:light-dark(#0b8f7b,#2fc9ae);--r0:light-dark(#e2ebff,#15264a);--r1:light-dark(#fff0c4,#332e18);--r2:light-dark(#ffdccf,#3a241f);--r3:light-dark(#ffc9cc,#4b1e27)}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 "Nunito Sans",system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3,.big{font-family:Sora,system-ui,sans-serif;letter-spacing:-.02em;line-height:1.05;margin:0}
+h2{font-size:24px;margin-bottom:12px}h3{font-size:19px}
+.band{padding:clamp(20px,3.5vw,44px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+.top{background:var(--band);color:#fff;padding-bottom:0}
+.tline{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between}
+h1{font-size:clamp(32px,5vw,48px);text-wrap:balance}
+.sub{margin:6px 0 0;opacity:.9}
+.who{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end}
+#sync,.uchip{font-size:14px;padding:6px 12px;border-radius:999px;background:rgb(255 255 255/.16);white-space:nowrap}
+#sync.warn{background:var(--sun);color:#1b1400}
+.lbtn{background:none;border:1px solid rgb(255 255 255/.5);color:#fff;border-radius:999px;font:700 14px "Nunito Sans",sans-serif;min-height:36px;padding:0 14px;cursor:pointer}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(10.5em,1fr));gap:14px;margin:22px 0 18px}
+.fg{border-top:2px solid rgb(255 255 255/.35);padding-top:10px}
+.fg .big{font-size:clamp(28px,4vw,38px);white-space:nowrap}.fg .big small{font-size:16px;opacity:.8;font-family:"Nunito Sans",sans-serif;letter-spacing:0}
+.fg span{display:block;font-size:14px;opacity:.88}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs a{color:#fff;text-decoration:none;font-weight:700;padding:12px 18px;border-radius:14px 14px 0 0;min-height:44px}
+.tabs a[aria-current=page]{background:var(--bg);color:var(--ink)}
+.demo{background:var(--sunt);border-bottom:1px solid var(--sun);padding:10px max(5vw,16px);font-size:15px}
+.grid2{display:grid;gap:24px;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:start}
+@media(max-width:880px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--pan);border:1px solid var(--line);border-radius:18px;padding:20px}
+.fig{position:relative;min-height:450px}.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+svg text{paint-order:stroke;stroke-linejoin:round}
+.rl{font:600 13px "Nunito Sans",sans-serif;fill:var(--mut);stroke:var(--bg);stroke-width:4px}
+.in{font:700 13px Sora,sans-serif;fill:#fff;stroke:none;pointer-events:none}
+.nm{font:700 13px "Nunito Sans",sans-serif;fill:var(--ink);stroke:var(--bg);stroke-width:4px;pointer-events:none}
+.dot{cursor:pointer}.dot:focus{outline:none}.dot:focus-visible circle:last-of-type,.dot:hover circle{filter:brightness(1.12)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:14px;color:var(--mut);margin-top:10px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+.av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 14px Sora,sans-serif}
+.row b{display:block}.row small,.mut{color:var(--mut);font-size:14px}
+.btn{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:700 15px "Nunito Sans",sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;white-space:nowrap}
+.btn:hover{border-color:var(--bandk)}.btn.pri{background:var(--band);color:#fff;border-color:transparent}.btn.sm{min-height:36px;padding:0 12px;font-size:14px}
+.btn[aria-pressed=true]{background:var(--ink);color:var(--bg)}.btn:disabled{opacity:.5;cursor:wait}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mrow{display:grid;grid-template-columns:2.6em minmax(0,1fr) 3.4em;gap:10px;align-items:center;min-height:28px}
+.track{position:relative;height:14px;border-radius:999px;background:var(--line);display:flex}
+.seg{height:100%}.seg.f{background:var(--band);border-radius:999px 0 0 999px}.seg.m{background:repeating-linear-gradient(135deg,var(--sun) 0 4px,transparent 4px 8px)}
+.goal{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink)}
+.mrow .v{text-align:right;font-variant-numeric:tabular-nums;font-size:14px;color:var(--mut)}
+.sched{list-style:none;margin:0;padding:0}
+.sched li{display:grid;grid-template-columns:5.4em minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.sched .d{font:700 18px Sora,sans-serif;white-space:nowrap}
+.pill{display:inline-block;font-size:13px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--line);color:var(--ink);white-space:nowrap}
+.pill.confirmado{background:var(--g-outros);color:#fff}.pill.convidado{background:var(--g-amigos);color:#fff}.pill.feito{background:var(--mut);color:var(--bg)}
+.pill.ring0{background:var(--r0)}.pill.ring1{background:var(--r1)}.pill.ring2{background:var(--r2)}.pill.ring3{background:var(--r3)}
+.agenda{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:24px;align-items:start}
+@media(max-width:880px){.agenda{grid-template-columns:minmax(0,1fr)}}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.dow{font-size:13px;font-weight:700;color:var(--mut);padding:0 4px}
+.cell{min-height:88px;text-align:left;padding:6px;border-radius:10px;border:1px solid var(--line);background:var(--bg);display:flex;flex-direction:column;gap:3px;align-items:flex-start;font:inherit;color:inherit;cursor:pointer;overflow:hidden}
+.cell.void{border:0;background:none;cursor:default}
+.cell.soc{background:var(--pan)}.cell.janela{background:var(--sunt);border-color:var(--sun)}
+.cell.ocupado{background:repeating-linear-gradient(135deg,var(--pan) 0 6px,var(--bg) 6px 12px);color:var(--mut)}
+.cell.past{opacity:.55}.cell.sel{outline:3px solid var(--bandk);outline-offset:1px}
+.cell b{font:700 15px Sora,sans-serif;padding:0 6px;border-radius:999px}.cell.today b{background:var(--band);color:#fff}
+.tag{font-style:normal;font-size:13px;font-weight:700}
+.chip{font-size:13px;padding:1px 6px;border-radius:6px;background:var(--g-amigos);color:#fff;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip.confirmado{background:var(--g-outros)}.chip.feito{background:var(--mut);color:var(--bg)}.chip.planejado{background:none;color:var(--ink);border:1px dashed var(--bandk)}
+.gc,.more{font-size:13px;color:var(--mut);white-space:nowrap}
+.glist{list-style:none;margin:0 0 12px;padding:0;font-size:14px}.glist li{padding:4px 0;border-top:1px solid var(--line)}.glist b{display:inline-block;min-width:4.2em;font-variant-numeric:tabular-nums}
+@media(max-width:600px){.cell{min-height:56px;padding:4px}.tag,.gc,.more{font-size:0}.chip{font-size:0;width:9px;height:9px;padding:0;border-radius:50%}.gc::after{content:"";display:inline-block;width:7px;height:7px;border:2px solid var(--mut);border-radius:50%}}
+.seg3{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.tbl{width:100%;border-collapse:collapse}.tbl th,.tbl td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}.tbl th{font-size:14px;color:var(--mut)}
+.tbl .n{text-align:right;font-variant-numeric:tabular-nums}
+.nmc{display:flex;gap:10px;align-items:center}.nmc .av{width:34px;height:34px;font-size:13px;flex:none}
+.scroll{overflow-x:auto}
+.mhead{font:700 15px Sora,sans-serif;margin:18px 0 0;color:var(--mut)}
+input,select,textarea{font:16px/1.4 "Nunito Sans",sans-serif;min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);width:100%}
+textarea{min-height:88px;resize:vertical}
+dialog{border:0;border-radius:20px;padding:0;width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 24px);background:var(--bg);color:var(--ink);box-shadow:0 20px 50px rgb(0 0 0/.3)}
+dialog::backdrop{background:rgb(5 10 25/.55)}
+dialog form{padding:22px}.fld{display:grid;gap:6px;margin-bottom:14px}.fld>span{font-weight:700;font-size:14px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.pick{display:flex;flex-wrap:wrap;gap:8px;max-height:190px;overflow:auto;padding:2px}
+.pk{position:relative}.pk input{position:absolute;opacity:0;width:1px;height:1px}
+.pk span{display:inline-flex;min-height:40px;align-items:center;gap:6px;padding:0 14px;border-radius:999px;border:1px solid var(--line);cursor:pointer}
+.pk input:checked+span{background:var(--band);color:#fff;border-color:transparent}.pk input:focus-visible+span{outline:3px solid var(--sun)}
+.err{color:var(--cor);font-weight:700;min-height:1.4em;margin:0 0 8px}
+.foot{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-top:8px}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:14px;display:flex;gap:12px;align-items:center;max-width:calc(100vw - 32px);z-index:9}
+#toast[hidden]{display:none}#toast button{background:none;border:0;color:var(--sun);font:700 15px "Nunito Sans",sans-serif;cursor:pointer;min-height:36px}
+.empty{padding:16px;border:1px dashed var(--line);border-radius:14px;color:var(--mut)}
+details summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+#login{min-height:70vh;display:grid;place-items:center}
+#login .card{max-width:440px;text-align:left}
+@media(max-width:600px){.fig{min-height:360px}.two{grid-template-columns:minmax(0,1fr)}.tbl{font-size:14px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stack td{display:flex;justify-content:space-between;gap:12px;border:0;padding:3px 0}.stack td::before{content:attr(data-l);color:var(--mut);font-size:13px}.stack td.nmcell::before{content:none}}
+@media(prefers-reduced-motion:no-preference){.view:not([hidden]){animation:in .25s ease-out}@keyframes in{from{opacity:0;transform:translateY(6px)}}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header class="band top"><div class="wrap">
+  <div class="tline"><div><h1>Meu Círculo 2027</h1><p class="sub" id="sub">Meta: 2 encontros por mês, com gente diferente.</p></div>
+    <div class="who"><span id="sync">Carregando…</span><button class="lbtn" id="gbtn" hidden>Conectar Google Agenda</button><span class="uchip" id="uname" hidden></span><button class="lbtn" id="sair" hidden>Sair</button></div></div>
+  <div id="appTop" hidden>
+    <div class="figs" id="figs"></div>
+    <nav class="tabs" aria-label="Seções"><a href="#painel">Painel</a><a href="#agenda">Agenda</a><a href="#pessoas">Pessoas</a><a href="#historico">Histórico</a></nav>
+  </div>
+</div></header>
+<div class="demo" id="demo" hidden>Modo demonstração: os dados ficam só neste navegador. Preencha o <b>firebase-config.js</b> para salvar no Firestore.</div>
+
+<section class="band" id="login" hidden><div class="card">
+  <h2>Entrar</h2>
+  <p>Entre com a conta Google da sua agenda. Seus amigos, encontros e histórico ficam no Firestore, visíveis só para essa conta, e o app pede permissão para ler e criar eventos no seu Google Agenda.</p>
+  <button class="btn pri" id="entrar">Entrar com Google</button>
+  <p class="err" id="lerr"></p>
+</div></section>
+
+<main id="app" hidden>
+<section class="view band" id="v-painel"><div class="wrap">
+  <div class="grid2">
+    <div><h2>Mapa da saudade</h2><div class="fig"><svg id="map" role="img" aria-label="Pessoas agrupadas por tempo desde o último encontro"></svg></div>
+      <div class="legend" id="legend"></div></div>
+    <div class="card"><h2>Quem chamar agora</h2><div id="fila"></div></div>
+  </div>
+  <div class="grid2" style="margin-top:24px">
+    <div class="card"><div class="tline" style="align-items:center;margin-bottom:12px"><h2 style="margin:0">Ritmo de <span id="ano">2027</span></h2>
+      <label class="bar mut" for="meta">Meta por mês <select id="meta" style="width:auto">
+        <option value="1">1 encontro</option><option value="2">2 encontros</option><option value="3">3 encontros</option><option value="4">4 encontros</option><option value="6">6 encontros</option><option value="8">8 encontros</option></select></label></div>
+      <div id="ritmo"></div><p class="legend"><span><i class="sw" style="background:var(--band)"></i>aconteceu</span><span><i class="sw" style="background:var(--sun)"></i>marcado</span><span>linha = meta</span></p></div>
+    <div class="card"><h2>Agenda social</h2><div id="prox"></div></div>
+  </div>
+</div></section>
+
+<section class="view band" id="v-agenda" hidden><div class="wrap">
+  <div class="tline" style="align-items:center;margin-bottom:14px">
+    <div class="bar"><button class="btn sm" data-act="prev" aria-label="Mês anterior">‹</button><h2 id="mtitle" style="margin:0;min-width:8.5em;text-align:center">mês</h2><button class="btn sm" data-act="next" aria-label="Próximo mês">›</button><button class="btn sm" data-act="hoje">Hoje</button></div>
+    <div class="bar"><button class="btn pri" data-act="sug">Reservar janelas do mês</button><button class="btn" data-act="gref" id="grefbtn">Atualizar do Google Agenda</button></div>
+  </div>
+  <div class="tline mut" style="margin-bottom:12px;align-items:center"><div class="bar"><span>Dias que contam como sociais:</span><span class="bar" id="wds"></span></div><div class="bar" id="gstat"></div></div>
+  <div class="agenda">
+    <div><div class="cal" id="cal"></div>
+      <p class="legend"><span><i class="sw" style="background:var(--sunt);border:1px solid var(--sun)"></i>janela reservada</span><span><i class="sw" style="background:var(--pan);border:1px solid var(--line)"></i>dia social livre</span><span><i class="sw" style="background:var(--mut)"></i>ocupado</span><span id="gsync"></span></p></div>
+    <aside class="card" id="dayp"></aside>
+  </div>
+</div></section>
+
+<section class="view band" id="v-pessoas" hidden><div class="wrap">
+  <div class="tline" style="align-items:center;margin-bottom:14px"><h2 style="margin:0">Pessoas do círculo</h2>
+    <div class="bar"><input id="q" type="search" placeholder="Buscar" style="width:12em" aria-label="Buscar pessoa"><button class="btn pri" data-act="addp">Adicionar pessoa</button></div></div>
+  <div class="scroll"><table class="tbl stack"><thead><tr><th>Nome</th><th>Ritmo</th><th>Último encontro</th><th>Situação</th><th>Próximo</th><th></th></tr></thead><tbody id="ptb"></tbody></table></div>
+  <details class="card" style="margin-top:20px"><summary>Adicionar vários de uma vez</summary>
+    <p class="mut">Um nome por linha. Depois você ajusta cada um.</p>
+    <textarea id="bulk" placeholder="Ana Paula&#10;Rafa&#10;Tia Cida"></textarea>
+    <div class="bar" style="margin-top:10px"><select id="bulkg" style="width:auto" aria-label="Grupo"></select><select id="bulkf" style="width:auto" aria-label="Ritmo"></select><button class="btn pri" data-act="bulk">Adicionar</button></div>
+  </details>
+</div></section>
+
+<section class="view band" id="v-historico" hidden><div class="wrap">
+  <div class="grid2">
+    <div><div class="tline" style="align-items:center;margin-bottom:6px"><h2 style="margin:0">Encontros que aconteceram</h2><select id="hano" style="width:auto" aria-label="Ano"></select></div><div id="hlist"></div></div>
+    <div class="card"><h2>Quem você viu</h2><div class="scroll"><table class="tbl"><thead><tr><th>Pessoa</th><th class="n">Encontros</th><th>Último</th></tr></thead><tbody id="hpes"></tbody></table></div>
+      <h3 style="margin-top:24px">Backup</h3><p class="mut">Tudo já fica no Firestore. O backup é uma cópia extra em arquivo.</p>
+      <div class="bar"><button class="btn" data-act="export">Baixar backup (JSON)</button><label class="btn" for="imp">Importar backup</label><input id="imp" type="file" accept="application/json,.json" hidden></div></div>
+  </div>
+</div></section>
+</main>
+
+<dialog id="dlgP"><form id="fP" method="dialog">
+  <h3 id="pTitle" style="margin-bottom:16px">Nova pessoa</h3>
+  <label class="fld"><span>Nome</span><input id="p-nome" required autocomplete="off"></label>
+  <div class="two"><label class="fld"><span>Grupo</span><select id="p-grupo"></select></label><label class="fld"><span>Quero ver</span><select id="p-freq"></select></label></div>
+  <div class="two"><label class="fld"><span>Último encontro</span><input id="p-ultimo" type="date"></label><label class="fld"><span>Aniversário (dia/mês)</span><input id="p-aniver" placeholder="15/03" inputmode="numeric"></label></div>
+  <label class="fld"><span>WhatsApp (com DDD)</span><input id="p-zap" type="tel" placeholder="71 99999-0000"></label>
+  <label class="fld"><span>Ideias de rolê com essa pessoa</span><textarea id="p-ideias" placeholder="praia no Porto da Barra, acarajé, cinema"></textarea></label>
+  <p class="err" id="p-err"></p>
+  <div class="foot"><button type="button" class="btn" id="p-del">Excluir</button><div class="bar"><button type="button" class="btn" data-close>Cancelar</button><button type="submit" class="btn pri">Salvar</button></div></div>
+</form></dialog>
+
+<dialog id="dlgE"><form id="fE" method="dialog">
+  <h3 id="eTitle" style="margin-bottom:16px">Novo encontro</h3>
+  <div class="fld"><span>Com quem</span><div class="pick" id="e-pick"></div></div>
+  <div class="two"><label class="fld"><span>Dia</span><input id="e-data" type="date" required></label><label class="fld"><span>Horário (opcional)</span><input id="e-hora" type="time"></label></div>
+  <div class="two"><label class="fld"><span>O que fazer</span><input id="e-ideia" placeholder="praia, almoço, cinema"></label><label class="fld"><span>Situação</span><select id="e-status"></select></label></div>
+  <label class="fld"><span>Mensagem do convite</span><textarea id="e-msg"></textarea></label>
+  <div class="bar" id="e-links" style="margin-bottom:12px"></div>
+  <p class="mut" id="e-gstate" style="margin:0 0 8px"></p>
+  <a class="btn sm" id="e-glink" target="_blank" rel="noopener" hidden style="margin-bottom:8px">Abrir no Google Agenda</a>
+  <p class="mut" id="e-hist" style="margin:0 0 8px"></p>
+  <p class="err" id="e-err"></p>
+  <div class="foot"><button type="button" class="btn" id="e-del">Excluir</button><div class="bar"><button type="button" class="btn" data-close>Fechar</button><button type="submit" class="btn pri">Salvar</button></div></div>
+</form></dialog>
+
+<div id="toast" hidden role="status"><span id="tmsg"></span><button id="tundo" hidden>Desfazer</button></div>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
